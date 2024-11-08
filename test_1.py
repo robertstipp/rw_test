@@ -3,7 +3,8 @@
 import requests
 import time
 import datetime
-import uuid
+
+from itertools import permutations 
 import json
 
 
@@ -49,7 +50,7 @@ def genHeader(title,id):
   header["Source"] = "GROUND"
   header["InternalTarget"] = "PRIMARY"
   header["Title"] = title
-  header["Description"] = str(uuid.uuid4())
+  header["Description"] = "Brief"
   id += 1
   return header
 
@@ -138,7 +139,7 @@ def init_reaction_wheel(reaction_wheel_destination,designation):
         print("\rError during request:", e)
         return False
 
-    print(f"Command Accepted Init Reaction Wheel {reaction_wheelname} from {designation}")
+    print(f"\rCommand Accepted Init Reaction Wheel {reaction_wheelname} from {designation}")
     return True
 
 def idle_reaction_wheel(reaction_wheel_destination,designation):
@@ -243,12 +244,16 @@ def run_reaction_wheel_idle_sequence():
   for i in range(4):
     idle_reaction_wheel(i, odin_primary_target)
 
-def run_reaction_wheel_torque_sequence_single(reaction_wheel_destination,wait_time):
-  torque_reaction_wheel(reaction_wheel_destination,0.066 ,dev)
-  print("Waiting")
-  time.sleep(wait_time)
-  torque_reaction_wheel(reaction_wheel_destination,-0.066 ,dev)
-  idle_reaction_wheel(reaction_wheel_destination,odin_primary_target)
+
+def run_reaction_wheel_torque_sequence_single(wait_time = 40):
+    for i in range(4):
+        for laps in range(5):
+            torque_reaction_wheel(i,0.066 ,dev)
+            print("\rWaiting 45 seconds")
+            time.sleep(wait_time)
+            torque_reaction_wheel(i,-0.066 ,dev)
+            time.sleep(wait_time)
+        idle_reaction_wheel(i, dev)
 
 # run_reaction_wheel_poweron_sequence()
 # time.sleep(1)
@@ -261,40 +266,88 @@ def run_reaction_wheel_torque_sequence_single(reaction_wheel_destination,wait_ti
 
 # print("ALL DONE")
 
-def run_reaction_wheel_torque_sequence_double(initial_wheels, followers,wait_time):
-  if len(set([*initial_wheels, *followers])) != 4:
-    print("This is a triple wheel test. Please provide two array of wheels of size 3 and 1 with no duplicates")
-    return
-  if len(initial_wheels) != 2:
-    print("This is a double wheel test. The initial wheel needs to be an array 2 wheel")
-    return
-  if len(followers) != 2:
-    print("This is a double wheel test. The follower wheel needs to be an array 2 wheel")
-    return 
-  for i in initial_wheels: 
-    torque_reaction_wheel(i,0.066 ,dev)
-  print("waiting")
-  time.sleep(wait_time)
-  for i in followers: 
-    torque_reaction_wheel(i,0.066 ,dev)
+# def run_reaction_wheel_torque_sequence_double(initial_wheels, followers,wait_time):
+#   if len(set([*initial_wheels, *followers])) != 4:
+#     print("This is a triple wheel test. Please provide two array of wheels of size 3 and 1 with no duplicates")
+#     return
+#   if len(initial_wheels) != 2:
+#     print("This is a double wheel test. The initial wheel needs to be an array 2 wheel")
+#     return
+#   if len(followers) != 2:
+#     print("This is a double wheel test. The follower wheel needs to be an array 2 wheel")
+#     return 
+#   for i in initial_wheels: 
+#     torque_reaction_wheel(i,0.066 ,dev)
+#   print("waiting")
+#   time.sleep(wait_time)
+#   for i in followers: 
+#     torque_reaction_wheel(i,0.066 ,dev)
 
-def run_reaction_wheel_torque_sequence_triple(initial_wheels, followers,wait_time):
-  if len(set([*initial_wheels, *followers])) != 4:
-    print("This is a triple wheel test. Please provide two array of wheels of size 3 and 1 with no duplicates")
-    return
-  if len(initial_wheels) != 3:
-    print("This is a triple wheel test. Please provide and array of 3 wheels")
-    return
-  if len(followers) != 1:
-    print("This is a triple wheel test. The follower wheel needs to be an array 1 wheel")
-    return 
+def run_reaction_wheel_torque_sequence_double(wait_time=40):
+    perms = list(permutations([0,1, 2, 3]))
+    print(f"Number of Permuations {len(perms)}")
+
+    for p in perms:
+        # Torque Two On Simultaneously
+        print("Leaders")
+        for i in p[:2]:
+            torque_reaction_wheel(i, 0.066,dev)
+        time.sleep(wait_time)
+        print("Followers")
+        # Torque One On Up Down Idle 
+        for j in p[2:]:
+            torque_reaction_wheel(j,0.066,dev)
+            time.sleep(wait_time)
+            torque_reaction_wheel(j,-0.066, dev)
+            time.sleep(wait_time)
+            idle_reaction_wheel(j, dev)
+        # Idle Leaders
+        for i in p[:2]:
+            idle_reaction_wheel(i, dev)
+        time.sleep(wait_time)
+
+def run_reaction_wheel_torque_sequence_tripe(wait_time=40):
+    perms = list(permutations([0,1, 2, 3]))
+    print(f"Number of Permuations {len(perms)}")
+
+    for p in perms:
+        print("Leaders")
+        # Torque Three On Simultaneously
+        for i in p[:3]:
+            torque_reaction_wheel(i, 0.066,dev)
+        time.sleep(wait_time)
+        print("Followers")
+        # Torque One On Up Down Idle 
+        for j in p[3:]:
+            torque_reaction_wheel(j,0.066,dev)
+            time.sleep(wait_time)
+            torque_reaction_wheel(j,-0.066, dev)
+            time.sleep(wait_time)
+            idle_reaction_wheel(j, dev)
+        # Idle Leaders
+        for i in p[:3]:
+            idle_reaction_wheel(i, dev)
+        time.sleep(wait_time)
   
-  for i in initial_wheels: 
-    torque_reaction_wheel(i,0.066 ,dev)
-  print("waiting")
-  time.sleep(wait_time)
-  for i in followers: 
-    torque_reaction_wheel(i,0.066 ,dev)
+run_reaction_wheel_torque_sequence_double(1)
+
+# def run_reaction_wheel_torque_sequence_triple(initial_wheels, followers,wait_time):
+#   if len(set([*initial_wheels, *followers])) != 4:
+#     print("This is a triple wheel test. Please provide two array of wheels of size 3 and 1 with no duplicates")
+#     return
+#   if len(initial_wheels) != 3:
+#     print("This is a triple wheel test. Please provide and array of 3 wheels")
+#     return
+#   if len(followers) != 1:
+#     print("This is a triple wheel test. The follower wheel needs to be an array 1 wheel")
+#     return 
+  
+#   for i in initial_wheels: 
+#     torque_reaction_wheel(i,0.066 ,dev)
+#   print("waiting")
+#   time.sleep(wait_time)
+#   for i in followers: 
+#     torque_reaction_wheel(i,0.066 ,dev)
 
 
 

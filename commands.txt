@@ -1,0 +1,102 @@
+{
+    "Data": {
+        "name": "Power Manager",
+        "header": {
+            "ID": 7005,
+            "Time": "2022-11-08T02:39:18.495Z",
+            "Source": "GROUND",
+            "InternalTarget": "PRIMARY",
+            "Title": "Power Manager Disable EN_28V_RW_P1",
+            "Description": "e0d69077-de19-4665-a077-64ca3f950edc"
+        },
+        "data": {
+            "Target": 9,
+            "Enable": false
+        }
+    },
+    "Target": "Dev",
+    "Mission": 2,
+    "Title": "Power Manager"
+}
+
+{
+    "Data": {
+        "name": "Power Manager",
+        "header": {
+            "ID": 7006,
+            "Time": "2022-11-08T02:39:18.495Z",
+            "Source": "GROUND",
+            "InternalTarget": "PRIMARY",
+            "Title": "Power Manager Disable EN_28V_RW_P2",
+            "Description": "fa740f7a-7522-4bb7-9760-7ee88668d3c9"
+        },
+        "data": {
+            "Target": 10,
+            "Enable": false
+        }
+    },
+    "Target": "Dev",
+    "Mission": 2,
+    "Title": "Power Manager"
+}
+
+{
+    "Data": {
+        "name": "Reaction Wheel Init",
+        "header": {
+            "ID": 7003,
+            "Time": "2022-11-08T03:12:29.091Z",
+            "Source": "GROUND",
+            "InternalTarget": "PRIMARY",
+            "Title": "Reaction Wheel A INIT",
+            "Description": "Brief Command Description"
+        },
+        "data": {
+            "Destination": 1
+        }
+    },
+    "Target": "Dev",
+    "Mission": 2,
+    "Title": "Reaction Wheel Init"
+}
+
+{
+    "Data": {
+        "name": "Reaction Wheel Idle",
+        "header": {
+            "ID": 7005,
+            "Time": "2022-11-08T03:12:29.091Z",
+            "Source": "GROUND",
+            "InternalTarget": "PRIMARY",
+            "Title": "Reaction Wheel A IDLE",
+            "Description": "Brief Command Description"
+        },
+        "data": {
+            "Destination": 1
+        }
+    },
+    "Target": "Dev",
+    "Mission": 2,
+    "Title": "Reaction Wheel Idle"
+}
+
+{
+    "Data": {
+        "name": "Reaction Wheel Torque Setpoint",
+        "header": {
+            "ID": 7006,
+            "Time": "2022-11-08T03:12:29.091Z",
+            "Source": "GROUND",
+            "InternalTarget": "PRIMARY",
+            "Title": "Reaction Wheel A Torque set to 0.066",
+            "Description": "Brief Command Description"
+        },
+        "data": {
+            "Torque": 0.066,
+            "Destination": 1
+        }
+    },
+    "Target": "Dev",
+    "Mission": 2,
+    "Title": "Reaction Wheel Torque Setpoint"
+}
